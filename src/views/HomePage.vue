@@ -39,9 +39,11 @@
                   </td>
                   <td scope="row">
                     <button
-                      class  = "btn btn-sm btn-info action-button"
-                      type   = "button"
-                      @click = "onclickDelete(testData)"
+                      class          = "btn btn-sm btn-info action-button"
+                      type           = "button"
+                      data-bs-toggle = "modal"
+                      data-bs-target = "#newsDetailsModal"
+                      @click         = "onclickDelete(testData)"
                     >
                       <fontA class="icons" icon="eye"/>
                     </button>
@@ -80,6 +82,8 @@
               </form>
           </div>
         </div>
+        
+        <!-- Edit Modal -->
         <div
           id          = "editModal"
           class       = "modal fade in"
@@ -169,18 +173,21 @@
             </div>
           </div>
         </div>
+        
+        <NewsDetails id="newsDetailsModal" />
       </div>
     </main>
   </div>
 </template>
 
 <script>
-  // import AddModal from '@/modals/AddModal.vue'
+  import NewsDetails from '@/components/NewsDetails.vue'
   import _ from 'lodash';
   import moment from 'moment';
+  
   export default {
     name: 'HomeView',
-    components: {  },
+    components: { NewsDetails },
     data() {
       return {
         fields   : ['Title', 'Content', 'Date'],
@@ -231,13 +238,22 @@
         this.cache    = this.editItem;
       },
       onclickSave(){
+        var alertTitle, alertMessage;
         if (this.newTitle !== '') {
           this.editItem.title = this.newTitle;
           this.editItem.id    = this.lastId + 1;
           this.testDatas.push(this.editItem)
+          
+          alertTitle   = "Created"
+          alertMessage = 'News Created!'
+          this.showAlert(alertTitle, alertMessage, 'success');
         } else {
           var index = this.testDatas.map(function (e) { return e.id }).indexOf(this.cache.id);
           this.testDatas.splice(index, 1, this.editItem);
+          
+          alertTitle   = "Saved"
+          alertMessage = 'Changes Saved'
+          this.showAlert(alertTitle, alertMessage, 'success');
         }
         
         this.clearData();
@@ -246,8 +262,25 @@
         this.clearData()
       },
       onclickDelete() {
-        var index = this.testDatas.map(function (e) { return e.id }).indexOf(this.cache.id);
-        this.testDatas.splice(index, 1)
+        this.$swal({
+          title            : 'Are You Sure Want To Delete This News?',
+          icon             : 'warning',
+          showCancelButton : true,
+          confirmButtonText: 'Delete',
+        }).then((result) => {
+          if (result.isConfirmed) {     
+            var index = this.testDatas.map(function (e) { return e.id }).indexOf(this.cache.id);
+            this.testDatas.splice(index, 1);
+            this.$swal('Deleted', '', 'error')
+          }
+        })
+      },
+      showAlert(title, text, icon) {
+        this.$swal({
+          title: title,
+          text : text,
+          icon : icon,
+        });
       },
       formatDate(value, format) {
         if (value) {
