@@ -46,8 +46,9 @@
                       @click         = "onclickEdit(testData)"
                     >Edit</button>
                     <button
-                      class = "btn btn-danger pl-2"
-                      type  = "button"
+                      class  = "btn btn-danger pl-2"
+                      type   = "button"
+                      @click = "onclickDelete(testData)"
                     >Delete</button>
                   </td>
                 </tr>
@@ -227,15 +228,12 @@
         this.newTitle = '';
       },
       onclickCancel() {
-        this.testDatas.forEach((value) => {
-          if (value.id === this.editItem.id) {
-            console.log(value);
-            console.log(this.editItem);
-            this.editItem = value
-          }
-        })
         this.editItem = {};
         this.newTitle = '';
+      },
+      onclickDelete(item) {
+        var index = this.testDatas.map(function (e) { return e.id }).indexOf(item.id);
+        this.testDatas.splice(index, 1)
       },
       formatDate(value, format) {
         if (value) {
