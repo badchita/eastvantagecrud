@@ -16,7 +16,7 @@
                     v-for = "(field,i) in fields"
                   :key    = "i"
                   >
-                    {{field}}
+                    {{ field }}
                   </th>
                   <th style="width: 150px">
                     Actions
@@ -29,13 +29,13 @@
                   :key    = "i"
                 >
                   <td scope="row">
-                    {{testData.title}}
+                    {{ testData.title }}
                   </td>
                   <td scope="row">
-                    {{testData.content}}
+                    {{ testData.content }}
                   </td>
                   <td scope="row">
-                    {{formatDate(testData.date)}}
+                    {{ formatDate(testData.date) }}
                   </td>
                   <td scope="row">
                     <button
@@ -43,7 +43,7 @@
                       type           = "button"
                       data-bs-toggle = "modal"
                       data-bs-target = "#newsDetailsModal"
-                      @click         = "onclickDelete(testData)"
+                      @click         = "onclickView(testData)"
                     >
                       <fontA class="icons" icon="eye"/>
                     </button>
@@ -152,6 +152,7 @@
               </div>
               <div class="modal-footer">
                 <button
+                  v-if            = "newTitle === ''"
                   class           = "btn btn-danger"
                   data-bs-dismiss = "modal"
                   type            = "button"
@@ -167,14 +168,17 @@
                   @click          = "onclickSave()"
                 >
                   <fontA icon="check"/>
-                  Save changes
+                  Save
                 </button>
               </div>
             </div>
           </div>
         </div>
         
-        <NewsDetails id="newsDetailsModal" />
+        <NewsDetails
+            id  = "newsDetailsModal"
+          :data = "editItem"
+        />
       </div>
     </main>
   </div>
@@ -232,6 +236,9 @@
       clearData() {
         this.editItem = {};
         this.newTitle = '';
+      },
+      onclickView(item) {
+        this.editItem = item
       },
       onclickEdit(item) {
         this.editItem = _.cloneDeep(item);

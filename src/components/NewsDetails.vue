@@ -10,7 +10,32 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <strong>Title</strong>
+            </div>
+            <div class="col-12">
+              <label>{{ data.title }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <strong>Content</strong>
+            </div>
+            <div class="col-12">
+              <label>{{ data.content }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <strong>Date</strong>
+            </div>
+            <div class="col-12">
+              <label>{{ formatDate(data.date) }}</label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -21,8 +46,31 @@
 </template>
 
 <script>
+  import moment from 'moment';
   export default {
+    props: {
+      data: {
+        type: Object,
+        default () {}
+      },
+    },
     name: 'NewsDetails',
+    methods: {
+      formatDate(value, format) {
+        if (value) {
+          var date = moment.unix(value)
+          if (!date.isValid()) {
+            date = moment(value)
+          }
+          if (format) {
+            return moment(date).format(format)
+          } else {
+            return moment(date).format('DD/MM/YYYY')
+          }
+        }
+        return ''
+      },
+    },
   }
 </script>
 
