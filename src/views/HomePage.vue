@@ -39,17 +39,21 @@
                   </td>
                   <td scope="row">
                     <button
-                      class          = "btn btn-primary"
+                      class  = "btn btn-sm btn-info action-button"
+                      type   = "button"
+                      @click = "onclickDelete(testData)"
+                    >
+                      <fontA class="icons" icon="eye"/>
+                    </button>
+                    <button
+                      class          = "btn btn-sm btn-primary action-button"
                       type           = "button"
                       data-bs-toggle = "modal"
                       data-bs-target = "#editModal"
                       @click         = "onclickEdit(testData)"
-                    >Edit</button>
-                    <button
-                      class  = "btn btn-danger pl-2"
-                      type   = "button"
-                      @click = "onclickDelete(testData)"
-                    >Delete</button>
+                    > 
+                      <fontA icon="pen-to-square"/>
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -76,11 +80,6 @@
               </form>
           </div>
         </div>
-        <!-- <AddModal
-            id           = "editModal"
-          :editItem.sync = "editItem"
-          :newTitle.sync = "newTitle"
-        /> -->
         <div
           id          = "editModal"
           class       = "modal fade in"
@@ -93,6 +92,13 @@
                   id    = "exampleModalLabel"
                   class = "modal-title"
                 >{{ title }}</h5>
+                <button
+                  class           = "btn-close"
+                  aria-label      = "Close"
+                  data-bs-dismiss = "modal"
+                  type            = "button"
+                  @click          = "onclickCancel()"
+                />
               </div>
               <div class="modal-body">
                 <div class="mb-3">
@@ -145,14 +151,20 @@
                   class           = "btn btn-danger"
                   data-bs-dismiss = "modal"
                   type            = "button"
-                  @click          = "onclickCancel()"
-                >Cancel</button>
+                  @click          = "onclickDelete()"
+                >
+                  <fontA icon="trash-can"/>
+                  Delete
+                </button>
                 <button
-                  class           = "btn btn-primary"
+                  class           = "btn btn-success"
                   data-bs-dismiss = "modal"
                   type            = "button"
                   @click          = "onclickSave()"
-                >Save changes</button>
+                >
+                  <fontA icon="check"/>
+                  Save changes
+                </button>
               </div>
             </div>
           </div>
@@ -210,6 +222,10 @@
       }
     },
     methods: {
+      clearData() {
+        this.editItem = {};
+        this.newTitle = '';
+      },
       onclickEdit(item) {
         this.editItem = _.cloneDeep(item);
         this.cache    = this.editItem;
@@ -224,15 +240,13 @@
           this.testDatas.splice(index, 1, this.editItem);
         }
         
-        this.editItem = {};
-        this.newTitle = '';
+        this.clearData();
       },
       onclickCancel() {
-        this.editItem = {};
-        this.newTitle = '';
+        this.clearData()
       },
-      onclickDelete(item) {
-        var index = this.testDatas.map(function (e) { return e.id }).indexOf(item.id);
+      onclickDelete() {
+        var index = this.testDatas.map(function (e) { return e.id }).indexOf(this.cache.id);
         this.testDatas.splice(index, 1)
       },
       formatDate(value, format) {
@@ -272,5 +286,11 @@
   
   .input-col {
     margin-left: 38px;
+  }
+  
+  .action-button {
+    color: white;
+    /* text-align: center; */
+    margin-left: 8px;
   }
 </style>
