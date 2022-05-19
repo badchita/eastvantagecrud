@@ -163,6 +163,7 @@
 
 <script>
   // import AddModal from '@/modals/AddModal.vue'
+  import _ from 'lodash';
   import moment from 'moment';
   export default {
     name: 'HomeView',
@@ -191,12 +192,8 @@
             date   : '2022-05-20',
           }
         ],
-        editItem: {
-          id     : null,
-          title  : null,
-          content: null,
-          date   : null,
-        },
+        editItem: {},
+        cache   : '',
       }
     },
     computed: {
@@ -213,19 +210,30 @@
     },
     methods: {
       onclickEdit(item) {
-        this.editItem = item;
+        this.editItem = _.cloneDeep(item);
+        this.cache    = this.editItem;
       },
       onclickSave(){
         if (this.newTitle !== '') {
           this.editItem.title = this.newTitle;
           this.editItem.id    = this.lastId + 1;
           this.testDatas.push(this.editItem)
+        } else {
+          var index = this.testDatas.map(function (e) { return e.id }).indexOf(this.cache.id);
+          this.testDatas.splice(index, 1, this.editItem);
         }
         
         this.editItem = {};
         this.newTitle = '';
       },
       onclickCancel() {
+        this.testDatas.forEach((value) => {
+          if (value.id === this.editItem.id) {
+            console.log(value);
+            console.log(this.editItem);
+            this.editItem = value
+          }
+        })
         this.editItem = {};
         this.newTitle = '';
       },
