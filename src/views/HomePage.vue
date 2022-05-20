@@ -177,7 +177,7 @@
         
         <NewsDetails
             id  = "newsDetailsModal"
-          :data = "editItem"
+          :data = "cache"
         />
       </div>
     </main>
@@ -238,7 +238,8 @@
         this.newTitle = '';
       },
       onclickView(item) {
-        this.editItem = item
+        this.editItem = _.cloneDeep(item);
+        this.cache    = this.editItem;
       },
       onclickEdit(item) {
         this.editItem = _.cloneDeep(item);
@@ -270,7 +271,7 @@
       },
       onclickDelete() {
         this.$swal({
-          title            : 'Are You Sure Want To Delete This News?',
+          title            : 'Are You Sure You Want To Delete This News?',
           icon             : 'warning',
           showCancelButton : true,
           confirmButtonText: 'Delete',
